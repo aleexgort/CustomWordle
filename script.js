@@ -1,19 +1,21 @@
-// Get the encoded word from URL
+// ===== Get the secret word from URL (Base64) =====
 const params = new URLSearchParams(window.location.search);
 const encodedWord = params.get("word");
 
 // Decode it if exists, otherwise null
 const secret = encodedWord ? atob(encodedWord).toUpperCase() : null;
 
-// Hide the guessing section until secret exists
+// ===== DOM elements =====
 const guessSection = document.getElementById("guessSection");
 const board = document.getElementById("board");
+
+// Hide guessing section if no secret word in URL
 if (!secret) {
   guessSection.style.display = "none";
 } else {
   guessSection.style.display = "block";
 
-  // Create the board
+  // Create the 6x5 board
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("div");
     row.className = "row";
@@ -28,6 +30,7 @@ if (!secret) {
 
 let currentRow = 0;
 
+// ===== Submit a guess =====
 function submitGuess() {
   const input = document.getElementById("guess");
   const guess = input.value.toUpperCase();
@@ -82,18 +85,19 @@ function submitGuess() {
   input.value = "";
 }
 
-// Generate Base64 link
+// ===== Generate Base64 link for a secret word =====
 function generateLink() {
-  const secretInput = document.getElementById("secretInput").value.toUpperCase();
-
-  if (secretInput.length !== 5) {
-    alert("Enter exactly 5 letters for the secret word.");
-    return;
+    const secretInput = document.getElementById("secretInput").value.toUpperCase();
+  
+    if (secretInput.length !== 5) {
+      alert("Enter exactly 5 letters for the secret word.");
+      return;
+    }
+  
+    // Encode the word in Base64
+    const encoded = btoa(secretInput);
+  
+    // Redirect immediately to the encoded URL
+    window.location.href = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
   }
-
-  const encoded = btoa(secretInput);
-  const link = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
-
-  const linkEl = document.getElementById("generatedLink");
-  linkEl.innerHTML = `Share this link: <a href="${link}" target="_blank">${link}</a>`;
-}
+  
