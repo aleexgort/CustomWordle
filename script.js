@@ -26,21 +26,39 @@ function submitGuess() {
   }
 
   const row = board.children[currentRow];
-  const secretLetters = secret.split("");
+  const secretLetters = secret.split(""); // mutable copy
+  const guessLetters = guess.split("");
+  const result = Array(5).fill(""); // store color for each tile
 
+  // 1️⃣ First pass: mark greens
   for (let i = 0; i < 5; i++) {
-    const tile = row.children[i];
-    tile.textContent = guess[i];
-
-    if (guess[i] === secret[i]) {
-      tile.classList.add("green");
-    } else if (secretLetters.includes(guess[i])) {
-      tile.classList.add("yellow");
-    } else {
-      tile.classList.add("gray");
+    if (guessLetters[i] === secretLetters[i]) {
+      result[i] = "green";
+      secretLetters[i] = null; // remove letter from availability
     }
   }
 
+  // 2️⃣ Second pass: mark yellows
+  for (let i = 0; i < 5; i++) {
+    if (!result[i]) { // not green
+      const index = secretLetters.indexOf(guessLetters[i]);
+      if (index !== -1) {
+        result[i] = "yellow";
+        secretLetters[index] = null; // remove used letter
+      } else {
+        result[i] = "gray";
+      }
+    }
+  }
+
+  // 3️⃣ Apply colors to tiles
+  for (let i = 0; i < 5; i++) {
+    const tile = row.children[i];
+    tile.textContent = guessLetters[i];
+    tile.classList.add(result[i]);
+  }
+
+  // 4️⃣ Check win / game over
   if (guess === secret) {
     document.getElementById("message").textContent = "🎉 You won!";
   } else if (currentRow === 5) {
