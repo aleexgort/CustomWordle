@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const secret = (params.get("word") || "APPLE").toUpperCase();
+const secret = (params.get("word") || "APFEL").toUpperCase();
 
 let currentRow = 0;
 
