@@ -1,11 +1,9 @@
 // ===== Get the secret word from URL (Base64) =====
 const params = new URLSearchParams(window.location.search);
 const encodedWord = params.get("word");
-
-// Decode it if exists, otherwise null
 const secret = encodedWord ? atob(encodedWord).toUpperCase() : null;
 
-// ===== DOM elements =====
+// DOM elements
 const guessSection = document.getElementById("guessSection");
 const board = document.getElementById("board");
 
@@ -15,7 +13,7 @@ if (!secret) {
 } else {
   guessSection.style.display = "block";
 
-  // Create the 6x5 board
+  // Create board dynamically (6 rows x 5 tiles)
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("div");
     row.className = "row";
@@ -87,38 +85,25 @@ function submitGuess() {
 
 // ===== Generate Base64 link for a secret word =====
 function generateLink() {
-    const secretInput = document.getElementById("secretInput").value.toUpperCase();
-  
-    if (secretInput.length !== 5) {
-      alert("Enter exactly 5 letters for the secret word.");
-      return;
-    }
-  
-    // Encode the word in Base64
-    const encoded = btoa(secretInput);
-  
-    // Update the URL in the browser without reloading the page
-    const newUrl = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
-    window.history.pushState({ path: newUrl }, "", newUrl);
-  
-    // After updating the URL, show the guessing board if hidden
-    const guessSection = document.getElementById("guessSection");
-    const board = document.getElementById("board");
-  
-    guessSection.style.display = "block";
-  
-    // Create the board dynamically if not already created
-    if (board.children.length === 0) {
-      for (let i = 0; i < 6; i++) {
-        const row = document.createElement("div");
-        row.className = "row";
-        for (let j = 0; j < 5; j++) {
-          const tile = document.createElement("div");
-          tile.className = "tile";
-          row.appendChild(tile);
-        }
-        board.appendChild(row);
-      }
-    }
+  const secretInput = document.getElementById("secretInput").value.toUpperCase();
+
+  if (secretInput.length !== 5) {
+    alert("Enter exactly 5 letters for the secret word.");
+    return;
   }
+
+  // Encode in Base64
+  const encoded = btoa(secretInput);
+
+  // Generate the shareable link
+  const link = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+
+  // Display it in the read-only input field
+  const linkInput = document.getElementById("generatedLink");
+  linkInput.value = link;
+  linkInput.select(); // optional: highlight text
+  document.execCommand("copy"); // optional: auto-copy to clipboard
+  alert("Link generated and copied to clipboard!");
+}
+
   
