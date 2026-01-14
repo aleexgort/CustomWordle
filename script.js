@@ -94,10 +94,13 @@ function generateLink() {
       return;
     }
   
-    // Encode the word in Base64
+    // Encode in Base64
     const encoded = btoa(secretInput);
   
-    // Redirect immediately to the encoded URL
-    window.location.href = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+    // Full URL for redirect
+    const fullUrl = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+    
+    // Redirect
+    window.location.href = fullUrl;
   }
   
