@@ -94,13 +94,17 @@ function generateLink() {
       return;
     }
   
-    // Encode in Base64
+    // Encode the word in Base64
     const encoded = btoa(secretInput);
   
-    // Full URL for redirect
+    // Generate full shareable URL
     const fullUrl = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
-    
-    // Redirect
-    window.location.href = fullUrl;
+  
+    // Display it in the read-only input field
+    const linkInput = document.getElementById("generatedLink");
+    linkInput.value = fullUrl;
+    linkInput.select(); // optional: automatically highlight the text
+    document.execCommand("copy"); // optional: automatically copy to clipboard
+    alert("Link generated and copied to clipboard!");
   }
   
