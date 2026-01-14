@@ -97,14 +97,28 @@ function generateLink() {
     // Encode the word in Base64
     const encoded = btoa(secretInput);
   
-    // Generate full shareable URL
-    const fullUrl = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+    // Update the URL in the browser without reloading the page
+    const newUrl = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+    window.history.pushState({ path: newUrl }, "", newUrl);
   
-    // Display it in the read-only input field
-    const linkInput = document.getElementById("generatedLink");
-    linkInput.value = fullUrl;
-    linkInput.select(); // optional: automatically highlight the text
-    document.execCommand("copy"); // optional: automatically copy to clipboard
-    alert("Link generated and copied to clipboard!");
+    // After updating the URL, show the guessing board if hidden
+    const guessSection = document.getElementById("guessSection");
+    const board = document.getElementById("board");
+  
+    guessSection.style.display = "block";
+  
+    // Create the board dynamically if not already created
+    if (board.children.length === 0) {
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        for (let j = 0; j < 5; j++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          row.appendChild(tile);
+        }
+        board.appendChild(row);
+      }
+    }
   }
   
