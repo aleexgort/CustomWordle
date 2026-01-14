@@ -8,13 +8,23 @@
 <body>
   <h1>Custom Wordle</h1>
 
-  <div id="board"></div>
+  <!-- ===== Section to create a secret word ===== -->
+  <h2>Create a secret word</h2>
+  <input id="secretInput" maxlength="5" placeholder="Enter secret word" />
+  <button onclick="generateLink()">Generate Link</button>
+  <p id="generatedLink"></p>
 
-  <input id="guess" maxlength="5" placeholder="Enter 5-letter word" />
-  <button onclick="submitGuess()">Guess</button>
+  <h2>Guess the word</h2>
+  <div id="guessSection">
+    <div id="board"></div>
+    <input id="guess" maxlength="5" placeholder="Enter 5-letter word" />
+    <button onclick="submitGuess()">Guess</button>
+    <p id="message"></p>
+  </div>
+  
 
-  <p id="message"></p>
 
   <script src="script.js"></script>
 </body>
 </html>
+

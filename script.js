@@ -1,20 +1,32 @@
+// Get the encoded word from URL
 const params = new URLSearchParams(window.location.search);
-const secret = (params.get("word") || "APFEL").toUpperCase();
+const encodedWord = params.get("word");
+
+// Decode it if exists, otherwise null
+const secret = encodedWord ? atob(encodedWord).toUpperCase() : null;
+
+// Hide the guessing section until secret exists
+const guessSection = document.getElementById("guessSection");
+const board = document.getElementById("board");
+if (!secret) {
+  guessSection.style.display = "none";
+} else {
+  guessSection.style.display = "block";
+
+  // Create the board
+  for (let i = 0; i < 6; i++) {
+    const row = document.createElement("div");
+    row.className = "row";
+    for (let j = 0; j < 5; j++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      row.appendChild(tile);
+    }
+    board.appendChild(row);
+  }
+}
 
 let currentRow = 0;
-
-const board = document.getElementById("board");
-
-for (let i = 0; i < 6; i++) {
-  const row = document.createElement("div");
-  row.className = "row";
-  for (let j = 0; j < 5; j++) {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    row.appendChild(tile);
-  }
-  board.appendChild(row);
-}
 
 function submitGuess() {
   const input = document.getElementById("guess");
@@ -68,4 +80,20 @@ function submitGuess() {
 
   currentRow++;
   input.value = "";
+}
+
+// Generate Base64 link
+function generateLink() {
+  const secretInput = document.getElementById("secretInput").value.toUpperCase();
+
+  if (secretInput.length !== 5) {
+    alert("Enter exactly 5 letters for the secret word.");
+    return;
+  }
+
+  const encoded = btoa(secretInput);
+  const link = `${window.location.origin}${window.location.pathname}?word=${encoded}`;
+
+  const linkEl = document.getElementById("generatedLink");
+  linkEl.innerHTML = `Share this link: <a href="${link}" target="_blank">${link}</a>`;
 }
